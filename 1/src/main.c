@@ -16,7 +16,7 @@ int main(int argc, char *argv[]) {
 	}
 
 	double x;
-	double step = fabs(options->a - options->b) / options->n;
+	double step = fabs(options->a - options->b) / options->n; // TODO: If step == 0 there is an infinite loop fix that.
 	for (x = options->a; x <= options->b; x += step) {
 		char stop;
 		double precise = pow((1 + x), -1.0/3);

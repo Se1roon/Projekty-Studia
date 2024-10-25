@@ -8,14 +8,18 @@ int validate_options(OPTIONS *opts) {
 		fprintf(stderr, "Dokładność musi być liczbą dodatnią!\n");
 		return -1;
 	}
-	if (opts->n < 0) {
-		fprintf(stderr, "Liczba podziałów musi być nieujemna!\n");
+	if (opts->n <= 0) {
+		fprintf(stderr, "Liczba podziałów musi być dodatnia!\n");
 		return -1;
 	}
 	if (opts->a <= -1) {
 		opts->a = -1 + opts->e;
 		fprintf(stderr, "Dla a <= -1 funkcja jest nieokreślona!\n");
 		printf("Wartość a została zawężona do %lf\n", opts->a);
+	}
+	if (opts->a > opts->b) {
+		fprintf(stderr, "Wartość a powinna być mniejsza od b!\n");
+		return -1;
 	}
 
 	FILE *f = fopen(opts->filepath, "w+");
