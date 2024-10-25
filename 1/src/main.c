@@ -4,15 +4,16 @@
 
 #include "common.h"
 #include "parse.h"
+#include "validate.h"
 
 double suma_szeregu(double x, double precise, double delta, char *warunek);
 
 int main(int argc, char *argv[]) {
-	// Create an options to pass command-line arguments (for scripters)
-	
 	OPTIONS *options = parse_options(argc, argv);
-
-	// Validation...
+	if (validate_options(options) == -1) {
+		free(options);
+		return -1;
+	}
 
 	double x;
 	double step = fabs(options->a - options->b) / options->n;
