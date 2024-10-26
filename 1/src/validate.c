@@ -32,3 +32,4 @@ int validate_options(OPTIONS *opts) {
 
 	return 0;
 }
+

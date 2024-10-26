@@ -35,7 +35,7 @@ OPTIONS *parse_options(int argc, char *argv[]) {
 			fprintf(stderr, "Dokładność musi być liczbą\n");
 			exit(-4);
 		}
-		printf("Gdzie zapisać plik (. -> ./out.txt): ");
+		printf("Gdzie zapisać plik: ");
 		scanf("%s", opts->filepath);
 	} else {
 		char current;
@@ -77,7 +77,7 @@ OPTIONS *parse_options(int argc, char *argv[]) {
 					strncpy(opts->filepath, optarg, FILEPATH_LEN);
 					break;
 				case '?':
-					fprintf(stderr, "Unknown options -%c\n", current);
+					fprintf(stderr, "Nieznana opcja -%c\n", current);
 					break;
 			}
 		}
@@ -96,3 +96,4 @@ void print_usage(char *argv[]) {
 
 	return;
 }
+
