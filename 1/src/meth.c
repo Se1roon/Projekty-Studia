@@ -20,9 +20,13 @@ double calculate_sum(OPTIONS *opts, double x, short *warunek, int *liczba_elemen
 
 		suma += element;
 		num_elementu++;
-	} while (num_elementu <= M && fabs(suma - (suma + element)) > opts->e);
+	} while (num_elementu <= M && fabs(element) > opts->e);
 
-	*warunek = (num_elementu >= M) ? -1 : 1;
+	if (num_elementu >= M && fabs(element) <= opts->e) *warunek = 2; // Oba
+	else if (num_elementu >= M && fabs(element) > opts->e) *warunek = 1; // Limit
+	else *warunek = 0; // Dok
+
+//	*warunek = (num_elementu >= M) ? -1 : 1;
 	*liczba_elementów = num_elementu;
 
 	return suma;

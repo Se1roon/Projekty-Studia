@@ -4,7 +4,7 @@
 #define SEPARATOR_LEN	107
 #define ROW_ELEM_LEN	15
 #define LE_ELEM_LEN		22
-#define WARUNEK_ELEM_LEN	27
+#define WARUNEK_ELEM_LEN	40
 
 #include <stdio.h>
 

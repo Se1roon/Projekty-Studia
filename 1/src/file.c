@@ -32,13 +32,16 @@ void output_to_stdout(double x, double w_ścisła, double suma, short warunek, i
 	}
 
 	printf("| warunek_stopu: ");
+	if (warunek == 2) printf("Limit i Dokładność");
+	else if (warunek == 1) printf("Limit");
+	else printf("Dokładność");
+
+	/*
 	if (warunek < 0) {
 		printf("Limit");
-		for (int i = 0; i < WARUNEK_ELEM_LEN - 16 - 5; i++)
-			printf(" ");
-	} else
+			} else
 		printf("Dokładność ");
-
+*/
 	printf("|\n");
 
 	return;
