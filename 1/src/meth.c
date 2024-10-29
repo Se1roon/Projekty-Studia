@@ -18,8 +18,8 @@ double calculate_sum(OPTIONS *opts, double x, short *warunek, int *liczba_elemen
 		else licznik = pow(-1, num_elementu-1) * (fabs(licznik) * (3 * num_elementu + 1));
 		mianownik *= (3 * (num_elementu + 1));
 
-		suma += element;
 		num_elementu++;
+		suma += element;
 	} while (num_elementu <= M && fabs(element) > opts->e);
 
 	if (num_elementu >= M && fabs(element) <= opts->e) *warunek = 2; // Oba

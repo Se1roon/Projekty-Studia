@@ -3,7 +3,7 @@
 
 #define FILEPATH_LEN 128
 
-#define M 100
+#define M 16
 
 typedef struct options_t {
 	// Zmienne definiujące przedział [a, b]
