@@ -32,7 +32,7 @@ int main(int argc, char *argv[]) {
 		int liczba_elementów;
 
 		double precise = pow((1 + x), -1.0/3);
-		double szereg = calculate_sum(options, x, precise, &stop, &liczba_elementów);
+		double szereg = calculate_sum(options, x, &stop, &liczba_elementów);
 
 		output_to_stdout(x, precise, szereg, stop, liczba_elementów);
 		output_to_file(out_file, x, precise, szereg, stop, liczba_elementów);

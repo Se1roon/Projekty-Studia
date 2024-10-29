@@ -3,6 +3,6 @@
 
 #include "common.h"
 
-double calculate_sum(OPTIONS *opts, double x, double w_ścisła, short *warunek, int *liczba_elementów);
+double calculate_sum(OPTIONS *opts, double x, short *warunek, int *liczba_elementów);
 
 #endif
