@@ -65,6 +65,17 @@ OPTIONS *parse_options(int argc, char *argv[]) {
 						fprintf(stderr, "Wartość dla opcji -n musi być liczbą!\n");
 						exit(-3);
 					}
+
+					int i = 0;
+					char c = optarg[i];
+					while (c != '\0') {
+						if (c == '.' || c == ',' || c == '/') {
+							fprintf(stderr, "Wartość dla opcji -n musi być liczbą całkowitą!\n");
+							exit(-4);
+						}
+						c = optarg[++i];
+					}
+
 					break;
 				case 'e':
 					opts->e = atof(optarg);
@@ -87,7 +98,7 @@ OPTIONS *parse_options(int argc, char *argv[]) {
 }
 
 void print_usage(char *argv[]) {
-	printf("Usage: %s -a <początek> -b <koniec> -e <dokładność> -f <ścieżka do zapisu>\n", argv[0]);
+	printf("Usage: %s -a <początek> -b <koniec> -n <ilość podziałów> -e <dokładność> -f <ścieżka do zapisu>\n", argv[0]);
 	printf("\t-f ~ ścieżka do pliku zapisu (. oznacza ./out.txt)\n");
 	printf("\t-a ~ początek przedziału [a,b]\n");
 	printf("\t-b ~ koniec przedziału [a,b]\n");

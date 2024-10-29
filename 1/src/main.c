@@ -9,13 +9,6 @@
 #include "meth.h"
 #include "file.h"
 
-/* TODO: Fix line 36 issue
- * TODO: Validate if n is an integer
- * TODO: Make output to file optional
- * TODO: Maybe colorize output (the most simple way of doing this won't work on all terminals) 
- * TODO: Try to find a better way of calculating the sum (mainly updating the licznik variable)
- */
-
 int main(int argc, char *argv[]) {
 	OPTIONS *options = parse_options(argc, argv);
 	if (validate_options(options) == -1) {
@@ -33,7 +26,7 @@ int main(int argc, char *argv[]) {
 	printf("===========================================================================================================\n");
 
 	double x;
-	double step = fabs(options->a - options->b) / options->n; // TODO: If step == 0 there is an infinite loop fix that.
+	double step = fabs(options->a - options->b) / options->n;
 	for (x = options->a; x <= options->b; x += step) {
 		short stop;
 		int liczba_elementów;

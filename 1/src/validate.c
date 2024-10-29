@@ -8,7 +8,7 @@ int validate_options(OPTIONS *opts) {
 		fprintf(stderr, "Dokładność musi być liczbą dodatnią!\n");
 		return -1;
 	}
-	if (opts->n <= 0) {
+	if (opts->n < 0) {
 		fprintf(stderr, "Liczba podziałów musi być dodatnia!\n");
 		return -1;
 	}
@@ -25,7 +25,7 @@ int validate_options(OPTIONS *opts) {
 	FILE *f = fopen(opts->filepath, "w+");
 	if (f == NULL) {
 		fprintf(stderr, "Ścieżka do pliku jest nieprawidłowa!\n");
-		fprintf(stderr, "Prawdopodobnie nie istnieje folder, w którym plik ma zostać utworzony.\n");
+		fprintf(stderr, "Prawdopodobnie nie istnieje folder, w którym plik ma zostać utworzony, lub opcja nie została podana.\n");
 		return -1;
 	}
 	fclose(f);
