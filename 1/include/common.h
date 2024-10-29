@@ -10,7 +10,7 @@ typedef struct options_t {
 	double a;
 	double b;
 	// Liczba podziałów przedziału [a,b]
-	int n;
+	double n;
 	// Dokładność
 	double e;
 	// Ścieżka pliku do zapisania resultatów

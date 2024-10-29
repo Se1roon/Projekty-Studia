@@ -21,6 +21,11 @@ int validate_options(OPTIONS *opts) {
 		fprintf(stderr, "Wartość a powinna być mniejsza od b!\n");
 		return -1;
 	}
+	if (opts->b >= 1) {
+		opts->b = 1 - opts->e;
+		fprintf(stderr, "Dla b >= 1 funkcja jest nieokreślona!\n");
+		printf("Wartość b została zawężona do %lf\n", opts->b);
+	}
 
 	FILE *f = fopen(opts->filepath, "w+");
 	if (f == NULL) {

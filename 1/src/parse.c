@@ -23,10 +23,7 @@ OPTIONS *parse_options(int argc, char *argv[]) {
 			exit(-2);
 		}
 		printf("Ilość podziałów: ");
-		// TODO: Maybe make n double and later validate if it is an int
-		// TODO: This method of validation if the type is corrent is not working
-		//		 scanf just reads in the first digit
-		if (scanf("%d", &opts->n) != 1) {
+		if (scanf("%lf", &opts->n) != 1) {
 			fprintf(stderr, "Ilość podziałów musi być liczbą całkowitą!\n");
 			exit(-3);
 		}
@@ -60,7 +57,7 @@ OPTIONS *parse_options(int argc, char *argv[]) {
 					}
 					break;
 				case 'n':
-					opts->n = atoi(optarg);
+					opts->n = atof(optarg);
 					if (opts->n == 0 && strncmp(optarg, "0", 1) != 0) {
 						fprintf(stderr, "Wartość dla opcji -n musi być liczbą!\n");
 						exit(-3);
