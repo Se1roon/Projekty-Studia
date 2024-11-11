@@ -1,6 +1,7 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <locale.h>
 
 #include "io.h"
 #include "ops.h"
@@ -8,6 +9,8 @@
 #define LINE_BUF_LEN	1024
 
 int main(int argc, char *argv[]) {
+	setlocale(LC_ALL, "");
+	
 	char *filepath = NULL;
 	if (cli_get_filepath(argc, argv, &filepath) < 0) return -1;
 
