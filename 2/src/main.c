@@ -8,6 +8,9 @@
 
 #define LINE_BUF_LEN	1024
 
+// TODO: Output to file
+// TODO: Support polish encoding
+
 int main(int argc, char *argv[]) {
 	setlocale(LC_ALL, "");
 	
@@ -19,6 +22,10 @@ int main(int argc, char *argv[]) {
 
 	int words_count = 0; // How many words I have
 	char **words = (char **)calloc(words_count, sizeof(char *)); // Array holding the pointers to all the words in the file
+	if (words == NULL) {
+		perror("calloc");
+		fclose(fd);
+	}
 
 	char *line = (char *)calloc(LINE_BUF_LEN, sizeof(char)); // Buffer for holding the line (1kB in size)
 	while (fgets(line, LINE_BUF_LEN, fd) /* Reads in the line */) {
@@ -31,12 +38,18 @@ int main(int argc, char *argv[]) {
 
 	words = sort_words(words, words_count);
 
+	// Outoput to stdout
 	for (int i = 0; i < words_count; i++)
 		printf("%s\n", words[i]);
+
+	// Output to file (out.txt)
+	FILE *out_fd = get_fd("./out.txt", "w+");
+	output_to_file(out_fd, words, words_count);
 
 	for (int i = 0; i < words_count; i++)
 		free(words[i]);
 	free(words);
 
+	fclose(fd);
 	return 0;
 }

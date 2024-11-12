@@ -11,6 +11,13 @@ FILE *get_fd(char *filepath, char *mode) {
 	return fd;
 }
 
+void output_to_file(FILE *f, char **words, int words_count) {
+	for (int i = 0; i < words_count; i++)
+		fprintf(f, "%s\n", words[i]);
+
+	return;
+}
+
 int cli_get_filepath(int argc, char *argv[], char **filepath) {
 	if (argc < 2) {
 		fprintf(stderr, "ERROR <cli_get_filepath>: -f flag is needed: -f <filepath> !\n");
