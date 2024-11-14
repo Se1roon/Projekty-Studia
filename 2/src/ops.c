@@ -3,6 +3,8 @@
 #include <string.h>
 #include <ctype.h>
 
+#include "ops.h"
+
 	// ['S', 'i', 'e', 'm', 'a', ' ', 'c', 'o', ' ', 't', 'a', 'm', '\0']
     //                       p    c    
 	//
@@ -19,8 +21,7 @@ char **fetch_words(char *line, char **words_out, int *words_out_len) {
 
 	// Copy all the pointers from the old array
 	char **words = (char **)calloc(*words_out_len, sizeof(char*));
-	for (int i = 0; i < *words_out_len; i++)
-		words[i] = words_out[i];
+	memcpy(words, words_out, *words_out_len * sizeof(char*));
 
 	free(words_out); // Free the old pointer to the array
 
@@ -60,48 +61,80 @@ char **fetch_words(char *line, char **words_out, int *words_out_len) {
 }
 
 
-char **sort_words(char **strs, int strs_size) {
-	char **strings = (char **)calloc(strs_size, sizeof(char *));
-	for (int i = 0; i < strs_size; i++)	strings[i] = strs[i];
-	free(strs);
+char **sort_words(char **words, int words_count) {
+	for (int i = 0; i + 1 < words_count; i++) {
+		char *current = words[i];
 
-	for (int i = 0; i < strs_size; i++) {
-		char *current = strings[i];
-
-		char *min = current;
-		int min_index = i;
-		int min_length = strlen(min);
-		for (int j = i + 1; j < strs_size; j++) {
-			int l = strlen(strings[j]);
-
-			// Convert strings to lowercase for comparison
-			char *min_lower = (char*)calloc(min_length + 1, sizeof(char));
-			char *str_lower = (char*)calloc(l + 1, sizeof(char));
-			
-			for (int x = 0; x < min_length; x++)
-				min_lower[x] = tolower(min[x]);
-			for (int y = 0; y < l; y++)
-				str_lower[y] = tolower(strings[j][y]);
-
-			if (l < min_length) {
-				if (strncmp(str_lower, min_lower, l) < 0) {
-					min = strings[j];
-					min_index = j;
-				}
-			} else {
-				if (strncmp(str_lower, min_lower, min_length) < 0) {
-					min = strings[j];
-					min_index = j;
-				}
+		int highest_index = i + 1;
+		char *highest = words[highest_index];
+		for (int j = i + 1; j < words_count; j++) {
+			if (compare_words(words[j], highest) > 0) {
+				highest = words[j];
+				highest_index = j;
 			}
-			
-			free(min_lower);
-			free(str_lower);
 		}
 
-		strings[i]	= min;
-		strings[min_index] = current;
+		if (compare_words(highest, current) > 0) {
+			words[i] = highest;
+			words[highest_index] = current;
+		}
 	}
 
-	return strings;
+	return words;
+}
+
+
+int compare_words(char *w1, char *w2) {
+	// 1. Jeżeli mamy ascii od 32 do 64 i od 91 do 96 i od 123 do 255 oraz <0 (nwm co to) ma być na końcu
+	// 2. Sprawdzić czy mam do czynienia z 2 dużymi jednym malym i duzym czy 2 malymi
+	//
+	// Jeżeli maly - duzy == 32 to sa tej samej klasy duzy > maly
+	// Jezeli maly - duzy > 32 to duzy > maly
+	// jezeli maly - duzy < 32 to maly > duzy
+
+	char c1 = w1[0]; // "points" to the characters in w1
+	char c2 = w2[0]; // the same but to w2
+	
+	int w1_len = strlen(w1);
+	int w2_len = strlen(w2);
+
+	int i = 1;
+	while (c1 != 0 && c2 != 0) {
+		if ((c1 >= 65 && c1 <= 90) && (c2 >= 97 && c2 <= 122)) {
+			// c1 upper and c2 lower ( w1="Plik" c1='P' | w2="xzan" c2='x')
+			if (c2 - c1 >= 32) return 1; // 120 - 80 = 40 => w1 > w2
+			if (c2 - c1 != 0) return -1;
+		} else if ((c2 >= 65 && c2 <= 90) && (c1 >= 97 && c1 <= 122)) {
+			// c1 lower and c2 upper
+			if (c1 - c2 >= 32) return -1;
+			if (c1 - c2 != 0) return 1;
+		} else if ((c1 >= 65 && c1 <= 90) && (c2 >= 65 && c2 <= 90)) {
+			// both upper
+			if (c1 != c2) return c1 - c2 < 0 ? 1 : -1;
+		} else if ((c1 >= 97 && c1 <= 122) && (c2 >= 97 && c2 <= 122)) {
+			// both lower
+			if (c1 != c2) return c1 - c2 < 0 ? 1 : -1;
+		} else {
+			if ((c1 >= 65 && c1 <= 90) || (c1 >= 97 && c1 <= 122)) {
+				// c1 normal c2 weid
+				return 1;
+			}
+			if ((c2 >= 65 && c2 <= 90) || (c2 >= 97 && c2 <= 122)) {
+				// c1 weird c2 normal
+				return -1;
+			} 
+
+			// c1 i c2 sa weird
+			if (c1 != c2) return c1 - c2 < 0 ? 1 : -1;
+		}
+
+		c1 = w1[i];
+		c2 = w2[i];
+		i++;
+	}
+
+	if (w1_len > w2_len) return 1;
+	if (w2_len > w1_len) return -1;
+
+	return 0;
 }

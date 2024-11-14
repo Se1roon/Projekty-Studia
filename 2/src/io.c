@@ -1,11 +1,12 @@
 #include <stdio.h>
 #include <getopt.h>
+#include <fcntl.h>
 
-FILE *get_fd(char *filepath, char *mode) {
-	FILE *fd = fopen(filepath, mode);
-	if (fd == NULL) {
+int get_fd(char *filepath, int flags) {
+	int fd = open(filepath, flags);
+	if (fd < 0) {
 		fprintf(stderr, "ERROR <get_fd>: Provided file doesn't exist or is inaccessible!\n");
-		return NULL;
+		return -1;
 	}
 
 	return fd;
