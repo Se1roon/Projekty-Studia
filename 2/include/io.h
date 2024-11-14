@@ -4,7 +4,7 @@
 #include <stdio.h>
 
 int cli_get_filepath(int argc, char *argv[], char **filepath);
-FILE *output_to_file(FILE *f, char **words, int words_count);
+void output_to_file(FILE *f, char **words, int words_count);
 int get_fd(char *filepath, int flags);
 
 #endif
