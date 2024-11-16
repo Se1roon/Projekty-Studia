@@ -9,9 +9,6 @@
 #include "in_out.h"
 #include "transform.h"
 
-// TODO: Support polish encoding for windows
-// TODO: Somehow handle unknown symbols
-
 int main(int argc, char *argv[]) {
 #ifdef _WIN32
 	setlocale(LC_ALL, "polish_Poland.1250");
@@ -66,7 +63,7 @@ int main(int argc, char *argv[]) {
 	// Sort those words (implement a better algorithm, maybe implement my own strcmp)
 	words = sort_words(words, words_count);
 
-	// Print words (also to output file, add another flag)
+	// Print words 
 	for (int i = 0; i < words_count; i++)
     	printf("%s\n", words[i]);
 
@@ -80,5 +77,6 @@ int main(int argc, char *argv[]) {
 	free(words);
 	close(input_fd);
 	close(output_fd);
+
 	return 0;
 }

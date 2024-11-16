@@ -45,3 +45,4 @@ int cli_get_filepath(int argc, char *argv[], char **filepath) {
 
 	return 0;
 }
+
