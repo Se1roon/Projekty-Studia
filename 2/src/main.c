@@ -6,14 +6,16 @@
 #include <locale.h>
 #include <sys/stat.h>
 
-#include "io.h"
-#include "ops.h"
+#include "in_out.h"
+#include "transform.h"
 
 // TODO: Support polish encoding for windows
 // TODO: Somehow handle unknown symbols
 
 int main(int argc, char *argv[]) {
-	//setlocale(LC_ALL, "Polish_Poland.1250");
+#ifdef _WIN32
+	setlocale(LC_ALL, "polish_Poland.1250");
+#endif
 	// Get the path to the input file from the user
 	char *filepath = NULL;
 	if (cli_get_filepath(argc, argv, &filepath) < 0) return -1;
@@ -68,11 +70,15 @@ int main(int argc, char *argv[]) {
 	for (int i = 0; i < words_count; i++)
     	printf("%s\n", words[i]);
 
+	int output_fd = open("out.txt", O_RDWR | O_CREAT, 0644);
+	output_to_file(output_fd, words, words_count);
+
 	// Cleaning (extract to function)
 	free(text_buffer);
 	for (int i = 0; i < words_count; i++)
 		free(words[i]);
 	free(words);
 	close(input_fd);
+	close(output_fd);
 	return 0;
 }

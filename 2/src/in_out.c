@@ -1,6 +1,10 @@
 #include <stdio.h>
 #include <getopt.h>
+#include <unistd.h>
+#include <string.h>
 #include <fcntl.h>
+
+#include "in_out.h"
 
 int get_fd(char *filepath, int flags) {
 	int fd = open(filepath, flags);
@@ -12,9 +16,11 @@ int get_fd(char *filepath, int flags) {
 	return fd;
 }
 
-void output_to_file(FILE *f, char **words, int words_count) {
-	for (int i = 0; i < words_count; i++)
-		fprintf(f, "%s\n", words[i]);
+void output_to_file(int fd, char **words, int words_count) {
+	for (int i = 0; i < words_count; i++) {
+		write(fd, words[i], strlen(words[i]));
+		write(fd, "\n", 1);
+	}
 
 	return;
 }

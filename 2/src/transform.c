@@ -3,15 +3,7 @@
 #include <string.h>
 #include <ctype.h>
 
-#include "ops.h"
-
-	// ['S', 'i', 'e', 'm', 'a', ' ', 'c', 'o', ' ', 't', 'a', 'm', '\0']
-    //                       p    c    
-	//
-	// words_len = 2
-	// words -> ['addr1',   'addr2', 'buff']
-	//			-> 'dada\0'
-
+#include "transform.h"
 
 char **fetch_words(char *line, char **words_out, int *words_out_len) {
 	int word_len = 0; // Length of the current word
