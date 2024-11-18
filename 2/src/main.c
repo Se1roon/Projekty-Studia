@@ -13,7 +13,7 @@ void clear(char **, int, int);
 
 int main(int argc, char *argv[]) {
 #ifdef _WIN32
-	setlocale(LC_ALL, "pl-PL.1250");
+	setlocale(LC_ALL, "pl_PL.1250");
 #endif
 	// Get the path to the input file from the user
 	char *filepath = NULL;
