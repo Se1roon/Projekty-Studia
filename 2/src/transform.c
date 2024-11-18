@@ -5,7 +5,7 @@
 
 #include "transform.h"
 
-char **fetch_words(char *line, char **words_out, int *words_out_len) {
+char **fetch_words(char *line, int *words_out_len) {
 	int word_len = 0; // Length of the current word
 	char *current_word = (char *)calloc(word_len, sizeof(char)); // Space for the new word
 	char c = ' ';
@@ -13,9 +13,6 @@ char **fetch_words(char *line, char **words_out, int *words_out_len) {
 
 	// Copy all the pointers from the old array
 	char **words = (char **)calloc(*words_out_len, sizeof(char*));
-	memcpy(words, words_out, *words_out_len * sizeof(char*));
-
-	free(words_out); // Free the old pointer to the array
 
 	int i = 0;
 	do {
@@ -93,7 +90,7 @@ int compare_words(char *w1, char *w2) {
 	int i = 1;
 	while (c1 != 0 && c2 != 0) {
 		if ((c1 >= 65 && c1 <= 90) && (c2 >= 97 && c2 <= 122)) {
-			// c1 upper and c2 lower ( w1="Plik" c1='P' | w2="xzan" c2='x')
+			// c1 upper and c2 lower
 			if (c2 - c1 >= 32) return 1; // 120 - 80 = 40 => w1 > w2
 			if (c2 - c1 != 0) return -1;
 		} else if ((c2 >= 65 && c2 <= 90) && (c1 >= 97 && c1 <= 122)) {
@@ -101,20 +98,12 @@ int compare_words(char *w1, char *w2) {
 			if (c1 - c2 >= 32) return -1;
 			if (c1 - c2 != 0) return 1;
 		} else if ((c1 >= 65 && c1 <= 90) && (c2 >= 65 && c2 <= 90)) {
-			// both upper
-			if (c1 != c2) return c1 - c2 < 0 ? 1 : -1;
+			if (c1 != c2) return c1 - c2 < 0 ? 1 : -1; // both upper
 		} else if ((c1 >= 97 && c1 <= 122) && (c2 >= 97 && c2 <= 122)) {
-			// both lower
-			if (c1 != c2) return c1 - c2 < 0 ? 1 : -1;
+			if (c1 != c2) return c1 - c2 < 0 ? 1 : -1; // both lower
 		} else {
-			if ((c1 >= 65 && c1 <= 90) || (c1 >= 97 && c1 <= 122)) {
-				// c1 normal c2 weid
-				return 1;
-			}
-			if ((c2 >= 65 && c2 <= 90) || (c2 >= 97 && c2 <= 122)) {
-				// c1 weird c2 normal
-				return -1;
-			} 
+			if ((c1 >= 65 && c1 <= 90) || (c1 >= 97 && c1 <= 122)) return 1;  // c1 normal c2 weid
+			if ((c2 >= 65 && c2 <= 90) || (c2 >= 97 && c2 <= 122)) return -1; // c1 weird c2 normal
 
 			// c1 i c2 sa weird
 			if (c1 != c2) return c1 - c2 < 0 ? 1 : -1;
@@ -125,8 +114,5 @@ int compare_words(char *w1, char *w2) {
 		i++;
 	}
 
-	if (w1_len > w2_len) return 1;
-	if (w2_len > w1_len) return -1;
-
-	return 0;
+	return (w1_len == w2_len) ? 0 : (w1_len > w2_len) ? 1 : -1;
 }

@@ -9,9 +9,11 @@
 #include "in_out.h"
 #include "transform.h"
 
+void clear(char **, int, int);
+
 int main(int argc, char *argv[]) {
 #ifdef _WIN32
-	setlocale(LC_ALL, "polish_Poland.1250");
+	setlocale(LC_ALL, "pl-PL.1250");
 #endif
 	// Get the path to the input file from the user
 	char *filepath = NULL;
@@ -43,22 +45,16 @@ int main(int argc, char *argv[]) {
 		free(text_buffer);
 		return -5;
 	}
-
-	// Allocate memory for storing the pointers to individual words 
-	int words_count = 0;
-	char **words = (char**)calloc(words_count, sizeof(char*));
-	if (words == NULL) {
-		perror("calloc");
-		close(input_fd);
-		free(text_buffer);
-	}
+	close(input_fd);
 
 	// Clear any \n with space
 	for (int i = 0; i < input_file_size; i++)
 		if (text_buffer[i] == '\n') text_buffer[i] = ' ';
 
 	// Fetch words from one long string of text
-	words = fetch_words(text_buffer, words, &words_count);
+	int words_count = 0;
+	char **words = fetch_words(text_buffer, &words_count);
+	free(text_buffer);
 
 	// Sort those words (implement a better algorithm, maybe implement my own strcmp)
 	words = sort_words(words, words_count);
@@ -70,13 +66,15 @@ int main(int argc, char *argv[]) {
 	int output_fd = open("out.txt", O_RDWR | O_CREAT, 0644);
 	output_to_file(output_fd, words, words_count);
 
-	// Cleaning (extract to function)
-	free(text_buffer);
-	for (int i = 0; i < words_count; i++)
-		free(words[i]);
-	free(words);
-	close(input_fd);
-	close(output_fd);
-
+	clear(words, words_count, output_fd);
 	return 0;
+}
+
+void clear(char **words, int words_len, int f_out) {
+	close(f_out);
+
+	for (int i = 0; i < words_len; i++) free(words[i]);
+	free(words);
+
+	return;
 }
