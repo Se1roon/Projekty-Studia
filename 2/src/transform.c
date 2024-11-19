@@ -11,7 +11,6 @@ char **fetch_words(char *line, int *words_out_len) {
 	char c = ' ';
 	char p = ' ';
 
-	// Copy all the pointers from the old array
 	char **words = (char **)calloc(*words_out_len, sizeof(char*));
 
 	int i = 0;
@@ -24,9 +23,6 @@ char **fetch_words(char *line, int *words_out_len) {
 		} else if ((p != ' ' && c == ' ') || (p != ' ' && c == '\0')) /*And here exist out of the word*/ {
 			// Here I add the new word to the array
 			
-			current_word = realloc(current_word, (word_len+1)*sizeof(char));
-			current_word[word_len] = '\0';
-
 			char *buff = (char *)calloc(word_len, sizeof(char));
 			strncpy(buff, current_word, word_len);
 
