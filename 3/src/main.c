@@ -5,6 +5,7 @@
 #include "common.h"
 #include "parse.h"
 #include "io.h"
+#include "calc.h"
 
 // TODO: Extract error handling logic to separate module
 
@@ -35,6 +36,13 @@ int main(int argc, char *argv[]) {
 		return STATUS_ERROR;
 	}
 
+	// TODO: Output to file & maybe make the output prettier
+
+	for (int i = 0; i < A_size; i++) {
+		if (i == A_size - 1) printf("x%d = %lf\n", i, calc_x(A, B, i, A_size));
+		else printf("x%d = %lf, ", i, calc_x(A, B, i, A_size));
+	}
+
 	clear(input_file, A, B, A_size);
 	return STATUS_SUCCESS;
 }
@@ -48,7 +56,7 @@ int clear(FILE *f, double **A, double **B, int size) {
 
 	for (int i = 0; i < size; i++)
 		free(B[i]);
-	free(B);
+	//free(B); TODO: Tu jest bug jakiś z przykładem r2
 
 	return STATUS_SUCCESS;
 }
