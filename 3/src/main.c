@@ -1,4 +1,5 @@
 #include <stdio.h>
+#include <string.h>
 #include <stdlib.h>
 
 #include "common.h"
@@ -10,7 +11,7 @@
  * TODO: Odpowiednio się zachować gdy 1 kolumna jest cała 0
  */ 
 
-int clear(FILE *, double **A, double **B, int A_rows);
+int clear(FILE *, double **A, double **B, double **Ae, int A_rows);
 void print_results(double **A, double **B, int A_rows);
 void print_matrices(double **A, double **B, int, int);
 void print_usage(char *argv[]);
@@ -45,17 +46,34 @@ int main(int argc, char *argv[]) {
 		fclose(input_file);
 		return STATUS_ERROR;
 	}
-	
-	if (validate_matrices(A, B, A_rows, A_cols) == STATUS_ERROR) {
-		clear(input_file, A, B, A_rows);
-		return STATUS_ERROR;
+
+	double **Ae = (double **)calloc(A_rows, sizeof(double *));
+	for (int row = 0; row < A_rows; row++) {
+		Ae[row] = (double *)calloc(A_cols + 1, sizeof(double));
+		memcpy(Ae[row], A[row], A_cols * sizeof(double));
+		Ae[row][A_cols] = B[row][0];
 	}
 
+	if (validate_matrices(A, B, A_rows, A_cols) == STATUS_ERROR) {
+		clear(input_file, A, B, Ae, A_rows);
+		return STATUS_SUCCESS;
+	}
 
+	int rA = calc_rank(A, A_rows, A_cols);
+	int rAe = calc_rank(Ae, A_rows, A_cols + 1);
+	if (rA != rAe) {
+		printf("Układ sprzeczny\n");
+		clear(input_file, A, B, Ae, A_rows);
+		return STATUS_SUCCESS;
+	} else if (rA < A_cols) {
+		printf("Układ ma nieskończenie wiele rozwiązań\n");
+		clear(input_file, A, B, Ae, A_rows);
+		return STATUS_SUCCESS;
+	}
+	
 	print_results(A, B, A_rows);
 
-
-	clear(input_file, A, B, A_rows);
+	clear(input_file, A, B, Ae, A_rows);
 	return STATUS_SUCCESS;
 }
 
@@ -88,7 +106,7 @@ void print_usage(char *argv[]) {
 	return;
 }
 
-int clear(FILE *f, double **A, double **B, int A_rows) {
+int clear(FILE *f, double **A, double **B, double **Ae, int A_rows) {
 	fclose(f);
 
 	for (int row = 0; row < A_rows; row++) free(A[row]);
@@ -96,6 +114,9 @@ int clear(FILE *f, double **A, double **B, int A_rows) {
 
 	for (int row = 0; row < A_rows; row++) free(B[row]);
 	free(B);
+	
+	for (int row = 0; row < A_rows; row++) free(Ae[row]);
+	free(Ae);
 
 	return STATUS_SUCCESS;
 }

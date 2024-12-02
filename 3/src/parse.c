@@ -9,11 +9,6 @@
 char *get_line(FILE *f);
 
 int validate_matrices(double **A, double **B, int A_rows, int A_cols) {
-	if (A_rows != A_cols) {
-		printf("Podany układ ma nieskończenie wiele rozwiązań lub jest sprzeczny.\n");
-		return STATUS_ERROR;
-	}
-
 	if (A[0][0] == 0) {
 		// Find row with first element != 0
 		int non_zero_row_index = -1;
