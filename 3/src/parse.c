@@ -6,41 +6,79 @@
 #include "common.h"
 #include "parse.h"
 
-// Definitions of utility functions
 char *get_line(FILE *f);
 
-int parse_matrices(FILE *f, double ***A_out, double ***B_out, int *A_size) {
-	double **A = (double **)calloc(1, sizeof(double));
-	double **B = (double **)calloc(1, sizeof(double));
+int validate_matrices(double **A, double **B, int A_rows, int A_cols) {
+	if (A_rows != A_cols) {
+		printf("Podany układ ma nieskończenie wiele rozwiązań lub jest sprzeczny.\n");
+		return STATUS_ERROR;
+	}
 
-	int line_num = 0; // row
-	int col_num = 0;
-	char *line = NULL;
-	while ((line = get_line(f))) {
-		A[line_num] = (double *)calloc(col_num + 1, sizeof(double)); // make space for 1 col in a row
-
-		char *w = strtok(line, " ");
-		A[line_num][col_num++] = atof(w);
-		
-		while ((w = strtok(NULL, " "))) {
-			A[line_num] = (double *)realloc(A[line_num], (col_num + 1) * sizeof(double));
-			A[line_num][col_num++] = atof(w);
+	if (A[0][0] == 0) {
+		// Find row with first element != 0
+		int non_zero_row_index = -1;
+		for (int row = 1; row < A_rows; row++) {
+			if (A[row][0] != 0) {
+				non_zero_row_index = row;
+				break;
+			}
 		}
 
-		double last = A[line_num][col_num - 1];
-		A[line_num] = (double *)realloc(A[line_num], (col_num - 1) * sizeof(double));
+		if (non_zero_row_index < 0) {
+			fprintf(stderr, "Nie jestem aktualnie w stanie rozwiązać tego równania :(\n");
+			return STATUS_ERROR;
+		}
 
-		B[line_num] = (double *)calloc(1, sizeof(double));
-		B[line_num][0] = last;
+		// Switch rows
+		double *t = A[0];
+		A[0] = A[non_zero_row_index];
+		A[non_zero_row_index] = t;
 
-		line_num++;
-		col_num = 0;
+		t = B[0];
+		B[0] = B[non_zero_row_index];
+		B[non_zero_row_index] = t;
+	}
+
+	return STATUS_SUCCESS;
+}
+
+int parse_matrices(FILE *f, double ***A_out, double ***B_out, int *A_rows, int *A_cols) {
+	double **A = (double **)calloc(0, sizeof(double *));
+	double **B = (double **)calloc(0, sizeof(double *));
+
+	int rows = 0;
+	int cols = 0;
+	int current_col = 0;
+	char *line = NULL;
+	while ((line = get_line(f))) {
+		A = (double **)realloc(A, (rows + 1) * sizeof(double *));
+		B = (double **)realloc(B, (rows + 1) * sizeof(double *));
+
+		char *w = strtok(line, " ");
+		while (w) {
+			double num = atof(w);
+			
+			if (current_col > 0) A[rows] = (double *)realloc(A[rows], (current_col + 1) * sizeof(double)); 
+			else A[rows] = (double *)calloc(current_col + 1, sizeof(double));
+			A[rows][current_col++] = num;
+
+			w = strtok(NULL, " ");
+		}
+		
+		B[rows] = (double *)calloc(1, sizeof(double));
+		memcpy(&B[rows][0], &A[rows][current_col - 1], sizeof(double));
+		A[rows] = (double *)realloc(A[rows], (current_col - 1) * sizeof(double));
+		
+		rows++;
+		cols = current_col - 1;
+		current_col = 0;
 		free(line);
 	}
 
 	*A_out = A;
 	*B_out = B;
-	*A_size = line_num;
+	*A_rows = rows;
+	*A_cols = cols;
 
 	free(line);
 	return STATUS_SUCCESS;
@@ -55,7 +93,6 @@ int parse_options(int argc, char *argv[], char **filepath) {
 				break;
 			case '?':
 				printf("Nieznana opcja -%c\n", op);
-				print_usage(argv);
 				return STATUS_ERROR;
 		}
 	}

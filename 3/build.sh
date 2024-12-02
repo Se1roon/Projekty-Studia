@@ -3,6 +3,6 @@
 gcc -o ./bin/main ./src/*.c -I./include -std=c99 -Wall -Wextra
 
 if [ "$1" == "run" ]; then
-	./bin/main -f rownania.txt
+	printf "Układ:\n" && cat tests/r$2.txt && printf "\n" && ./bin/main -f tests/r$2.txt
 fi
 

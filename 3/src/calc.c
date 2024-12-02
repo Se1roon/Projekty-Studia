@@ -2,7 +2,6 @@
 #include <stdlib.h>
 #include <math.h>
 
-#include "common.h"
 #include "calc.h"
 
 double calc_x(double **A, double **B, int i, int n) {
