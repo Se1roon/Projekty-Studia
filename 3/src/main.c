@@ -7,9 +7,6 @@
 #include "io.h"
 #include "calc.h"
 
-/* TODO: Być w stanie stwierdzić czy układ jest sprzeczny czy nieoznaczony
- * TODO: Odpowiednio się zachować gdy 1 kolumna jest cała 0
- */ 
 
 int clear(FILE *, double **A, double **B, double **Ae, int A_rows);
 void print_results(double **A, double **B, int A_rows);
