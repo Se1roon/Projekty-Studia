@@ -9,7 +9,8 @@ typedef struct student_t {
 	int year;
 } STUDENT;
 
-char *conv_lowercase(char *in);
+void student_cpy(STUDENT *dest, STUDENT *src);
+char *to_lower_str(char *text);
 STUDENT *read_student_stdin();
 STUDENT *read_student_file(FILE *f);
 void del_student(STUDENT *);

@@ -10,7 +10,8 @@ typedef struct stack_arr_t {
 	STUDENT *students;
 } STACK_A;
 
-STUDENT *pop_item_a(STACK_A *);
+STUDENT *find_by_field_stack_a(STACK_A *stack, char *field, char *search_term);
+STUDENT *pop_stack_a(STACK_A *);
 void add_item_a(STACK_A *, STUDENT *);
 void print_stack_a(STACK_A *);
 void remove_items_stack_a(STACK_A *stack);

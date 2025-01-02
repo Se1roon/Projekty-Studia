@@ -1,8 +1,33 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <ctype.h>
 
 #include "common.h"
+
+
+void student_cpy(STUDENT *dest, STUDENT *src) {
+	dest->name = (char *)calloc(strlen(src->name) + 1, sizeof(char));
+	strncpy(dest->name, src->name, strlen(src->name));
+
+	dest->surname = (char *)calloc(strlen(src->surname) + 1, sizeof(char));
+	strncpy(dest->surname, src->surname, strlen(src->surname));
+
+	dest->year = src->year;
+
+	return;
+}
+
+char *to_lower_str(char *text) {
+	int text_len = strlen(text); // excluding /0
+	char *output = (char *)calloc(text_len + 1, sizeof(char));
+	int i;
+	for (i = 0; i < text_len; i++)
+		output[i] = tolower(text[i]);
+	output[i] = '\0';
+
+	return output;
+}
 
 STUDENT *read_student_stdin() {
 	STUDENT *student = (STUDENT *)malloc(sizeof(STUDENT));
@@ -62,8 +87,14 @@ STUDENT *read_student_file(FILE *f) {
 }
 
 void del_student(STUDENT *student) {
-	free(student->name);
-	free(student->surname);
+	if (student->name) {
+		free(student->name);
+		student->name = NULL;
+	}
+	if (student->surname) {
+		free(student->surname);
+		student->surname = NULL;
+	}
 
 	return;
 }

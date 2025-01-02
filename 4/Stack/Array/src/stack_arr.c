@@ -1,11 +1,41 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdbool.h>
 
 #include "common.h"
 #include "stack_arr.h"
 
-// TODO: Maybe add validation to add, pop functions (check for stack and student being NULL etc)
+
+STUDENT *find_by_field_stack_a(STACK_A *stack, char *field, char *search_term) {
+	bool is_found = false;
+	STUDENT *student = (STUDENT *)malloc(sizeof(STUDENT));
+	if (strncmp(field, "imie", strlen(field)) == 0) {
+		for (int i = 0; i < stack->count; i++) {
+			if (strncmp(stack->students[i].name, search_term, strlen(search_term)) == 0) {
+				student_cpy(student, &stack->students[i]);
+				is_found = true;
+			}
+		}
+	} else if (strncmp(field, "nazwisko", strlen(field)) == 0) {
+		for (int i = 0; i < stack->count; i++) {
+			if (strncmp(stack->students[i].surname, search_term, strlen(search_term)) == 0) {
+				student_cpy(student, &stack->students[i]);
+				is_found = true;
+			}
+		}
+	} else if (strncmp(field, "rok", strlen(field)) == 0) {
+		for (int i = 0; i < stack->count; i++) {
+			if (stack->students[i].year == atoi(search_term)) {
+				student_cpy(student, &stack->students[i]);
+				is_found = true;
+			}
+		}
+	} else
+		return NULL;	
+
+	return (is_found) ? student : NULL;
+}
 
 void remove_items_stack_a(STACK_A *stack) {
 	for (int i = 0; i < stack->count; i++)
@@ -20,12 +50,8 @@ int size_stack_a(STACK_A *stack) {
 	return (stack) ? stack->count : -1;
 }
 
-STUDENT *pop_item_a(STACK_A *stack) {
-	if (stack->count <= 0) {
-		fprintf(stderr, "Could not remove an item from empty stack!\n");
-		del_stack_a(stack);
-		exit(-2);
-	} 
+STUDENT *pop_stack_a(STACK_A *stack) {
+	if (stack->count <= 0) return NULL;
 
 	STUDENT *student = (STUDENT *)malloc(sizeof(STUDENT));
 	memcpy(student, &stack->students[--stack->count], sizeof(STUDENT));
@@ -43,12 +69,12 @@ void add_item_a(STACK_A *stack, STUDENT *student) {
 }
 
 void print_stack_a(STACK_A *stack) {
-	printf("Number of students: %d\n\n", stack->count);
-	printf("TOP OF THE STACK\n");
+	printf("Liczba studentow na stosie: %d\n\n", stack->count);
+	printf("*\n");
 	for (int i = stack->count - 1; i >= 0; i--) {
-		printf("Name: %s\n", stack->students[i].name);
-		printf("Surname: %s\n", stack->students[i].surname);
-		printf("Year: %d\n", stack->students[i].year);
+		printf("imie: %s\n", stack->students[i].name);
+		printf("nazwisko: %s\n", stack->students[i].surname);
+		printf("rok: %d\n", stack->students[i].year);
 		printf("\n");
 	}
 }
