@@ -5,6 +5,7 @@
 #include "common.h"
 #include "interface.h"
 #include "stack_arr.h"
+#include "stack_list.h"
 
 
 enum INTER_OP {
@@ -33,6 +34,61 @@ void print_menu() {
 	for (int i = 0; i < 7; i++)
 		printf("%s\n", menu_op[i]);
 	printf("> ");
+	return;
+}
+
+void handle_stack_list() {
+	STACK_L *stack = init_stack_l(NULL);
+
+	int inter_op = -1;
+	while (1) {
+		print_menu();
+		char *op_inp = get_line(stdin);
+		inter_op = atoi(op_inp);
+		free(op_inp);
+
+		printf("\n");
+		switch (inter_op) {
+			case PUSH:
+				STUDENT_L *new_student = read_student_l_stdin();
+				if (!new_student) {
+					fprintf(stderr, "Nie udalo sie wczytac studenta!\n");
+					break;
+				}
+				
+				push_stack_l(stack, new_student);
+				print_stack_l(stack);
+				break;
+			case POP:
+				STUDENT_L *student = pop_stack_l(stack);
+				if (!student) {
+					printf("Nie moge pobrac studenta z pustego stosu\n");
+					break;
+				}
+
+				printf("Pobralem studenta: %s\n", student->name);
+				print_stack_l(stack);
+
+				free(student->name);
+				free(student->surname);
+				free(student);
+				break;
+			case CLEAR:
+				printf("Jeszcze nie zaimplementowane!\n");
+				break;
+			case FIND:
+				printf("Jeszcze nie zaimplementowane\n");
+				break;
+			case SAVE_TO_FILE: break;
+			case READ_FROM_FILE: break;
+			case FINISH:
+				delete_stack_l(stack);
+				return;
+			default:
+				fprintf(stderr, "Nie wiem o co ci chodzi\n");
+		}
+	}
+
 	return;
 }
 

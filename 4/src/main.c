@@ -39,7 +39,7 @@ int main(void) {
 				handle_stack_array();
 				break;
 			case STACK_LLIST:
-				printf("Jeszcze nie zaimplementowane!\n");
+				handle_stack_list();
 				break;
 			case QUEUE_ARRAY:
 				printf("Jeszcze nie zaimplementowane!\n");

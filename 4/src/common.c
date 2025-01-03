@@ -29,6 +29,38 @@ char *to_lower_str(char *text) {
 	return output;
 }
 
+STUDENT_L *read_student_l_stdin() {
+	STUDENT_L *student = (STUDENT_L *)malloc(sizeof(STUDENT_L));
+	if (!student) return NULL;
+	student->next = NULL;
+
+	printf("Podaj imie: ");
+	if (!(student->name = get_line(stdin))) {
+		free(student);
+		return NULL;
+	}
+
+	printf("Podaj nazwisko: ");
+	if (!(student->surname = get_line(stdin))) {
+		free(student->name);
+		free(student);
+		return NULL;
+	}
+
+	printf("Podaj rok urodzenia: ");
+	char *year_str = get_line(stdin);
+	if (!(student->year = atoi(year_str))) {
+		free(student->name);
+		free(student->surname);
+		free(student);
+		free(year_str);
+		return NULL;
+	}
+	free(year_str);
+
+	return student;
+}
+
 STUDENT *read_student_stdin() {
 	STUDENT *student = (STUDENT *)malloc(sizeof(STUDENT));
 

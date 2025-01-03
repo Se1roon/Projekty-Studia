@@ -2,5 +2,6 @@
 #define INTERFACE_H
 
 void handle_stack_array();
+void handle_stack_list();
 
 #endif
