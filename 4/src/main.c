@@ -45,7 +45,7 @@ int main(void) {
 				printf("Jeszcze nie zaimplementowane!\n");
 				break;
 			case QUEUE_LLIST:
-				printf("Jeszcze nie zaimplementowane!\n");
+				handle_queue_list();
 				break;
 			case QUIT:
 				exit(0);

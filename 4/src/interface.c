@@ -6,6 +6,7 @@
 #include "interface.h"
 #include "stack_arr.h"
 #include "stack_list.h"
+#include "queue_list.h"
 
 
 enum INTER_OP {
@@ -34,6 +35,94 @@ void print_menu() {
 	for (int i = 0; i < 7; i++)
 		printf("%s\n", menu_op[i]);
 	printf("> ");
+	return;
+}
+
+void handle_queue_list() {
+	QUEUE_L *queue = init_queue_l();
+
+	int inter_op = -1;
+	while (1) {
+		print_menu();
+		char *op_inp = get_line(stdin);
+		inter_op = atoi(op_inp);
+		free(op_inp);
+
+		printf("\n");
+		switch (inter_op) {
+			case PUSH:
+				STUDENT_L *new_student = read_student_l_stdin();
+				if (!new_student) {
+					fprintf(stderr, "Nie udalo sie wczytac studenta!\n");
+					break;
+				}
+				
+				enqueue_l(queue, new_student);
+				print_queue_l(queue);
+				break;
+			case POP:
+				STUDENT_L *student = dequeue_l(queue);
+				if (!student) {
+					printf("Nie moge pobrac studenta z pustego stosu\n");
+					break;
+				}
+
+				printf("Pobralem studenta: %s\n", student->name);
+				print_queue_l(queue);
+
+				free(student->name);
+				free(student->surname);
+				free(student);
+				break;
+			case CLEAR:
+				delete_queue_l(queue);
+				queue = init_queue_l(NULL);
+				print_queue_l(queue);
+				break;
+			case FIND:
+				printf("Podaj pole do wyszukania> ");
+				char *field_temp = get_line(stdin);
+				char *field = to_lower_str(field_temp);
+				free(field_temp);
+
+				printf("Podaj %s> ", field);
+				char *search_term = get_line(stdin);
+			
+				printf("\n");
+				STUDENT_L *found_student = find_by_field_queue_l(queue, field, search_term); // this doesn't make a copy
+				if (found_student) {
+					printf("Znaleziono:\n");
+					printf("imie: %s\n", found_student->name);
+					printf("nazwisko: %s\n", found_student->surname);
+					printf("rok: %d\n\n", found_student->year);
+				} else 
+					printf("Nie znaleziono takiego studenta.\n\n");
+
+				free(field);
+				free(search_term);
+				break;
+			case SAVE_TO_FILE: 
+				if (queue->count == 0) {
+					printf("Nie ma czego zapisywac\n");
+					break;
+				}
+
+				printf("Podaj nazwe pliku do zapisania> ");
+				char *save_file = get_line(stdin);
+
+				save_list_file(save_file, queue->head);
+				
+				free(save_file);
+				break;
+			case READ_FROM_FILE: break;
+			case FINISH:
+				delete_queue_l(queue);
+				return;
+			default:
+				fprintf(stderr, "Nie wiem o co ci chodzi\n");
+		}
+	}
+
 	return;
 }
 
