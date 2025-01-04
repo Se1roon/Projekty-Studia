@@ -16,6 +16,8 @@ typedef struct student_list_t {
 	struct student_list_t *next;
 } STUDENT_L;
 
+int save_list_file(char *filepath, STUDENT_L *head);
+int save_array_file(char *filepath, STUDENT *students, int students_count);
 void student_cpy(STUDENT *dest, STUDENT *src);
 char *to_lower_str(char *text);
 STUDENT_L *read_student_l_stdin();

@@ -1,10 +1,37 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "common.h"
 #include "stack_list.h"
 
 STUDENT_L *read_student_l_file(FILE *file);
+
+
+STUDENT_L *find_by_field_stack_l(STACK_L *stack, char *field, char *search_term) {
+	if (stack->count == 0) return NULL;
+
+	STUDENT_L *student = stack->head;
+	if (strncmp(field, "imie", strlen(field)) == 0) {
+		while (student)	{
+			if (strncmp(student->name, search_term, strlen(search_term)) == 0) return student;
+			student = student->next;
+		}
+	} else if (strncmp(field, "nazwisko", strlen(field)) == 0) {
+		while (student) {
+			if (strncmp(student->surname, search_term, strlen(search_term)) == 0) return student;
+			student = student->next;
+		}
+	} else if (strncmp(field, "rok", strlen(field)) == 0) {
+		while (student) {
+			if (student->year == atoi(search_term)) return student;
+			student = student->next;
+		}
+	} else
+		fprintf(stderr, "Niepoprawne pole!\n");
+
+	return NULL;
+}
 
 STUDENT_L *pop_stack_l(STACK_L *stack) {
 	if (stack->count == 0) return NULL;
@@ -31,9 +58,8 @@ void push_stack_l(STACK_L *stack, STUDENT_L *student) {
 }
 
 void print_stack_l(STACK_L *stack) {
-	if (stack->count == 0) return;
-
 	printf("\nLiczba studentow na stosie: %d\n\n", stack->count);
+	if (stack->count == 0) return;
 
 	STUDENT_L *current = stack->head;
 	while (current) {

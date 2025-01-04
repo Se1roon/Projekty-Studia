@@ -74,12 +74,45 @@ void handle_stack_list() {
 				free(student);
 				break;
 			case CLEAR:
-				printf("Jeszcze nie zaimplementowane!\n");
+				delete_stack_l(stack);
+				stack = init_stack_l(NULL);
+				print_stack_l(stack);
 				break;
 			case FIND:
-				printf("Jeszcze nie zaimplementowane\n");
+				printf("Podaj pole do wyszukania> ");
+				char *field_temp = get_line(stdin);
+				char *field = to_lower_str(field_temp);
+				free(field_temp);
+
+				printf("Podaj %s> ", field);
+				char *search_term = get_line(stdin);
+			
+				printf("\n");
+				STUDENT_L *found_student = find_by_field_stack_l(stack, field, search_term); // this doesn't make a copy
+				if (found_student) {
+					printf("Znaleziono:\n");
+					printf("imie: %s\n", found_student->name);
+					printf("nazwisko: %s\n", found_student->surname);
+					printf("rok: %d\n\n", found_student->year);
+				} else 
+					printf("Nie znaleziono takiego studenta.\n\n");
+
+				free(field);
+				free(search_term);
 				break;
-			case SAVE_TO_FILE: break;
+			case SAVE_TO_FILE: 
+				if (stack->count == 0) {
+					printf("Nie ma czego zapisywac\n");
+					break;
+				}
+
+				printf("Podaj nazwe pliku do zapisania> ");
+				char *save_file = get_line(stdin);
+
+				save_list_file(save_file, stack->head);
+				
+				free(save_file);
+				break;
 			case READ_FROM_FILE: break;
 			case FINISH:
 				delete_stack_l(stack);
@@ -157,7 +190,14 @@ void handle_stack_array() {
 				del_student(found_student);
 				free(found_student);
 				break;
-			case SAVE_TO_FILE: break;
+			case SAVE_TO_FILE: 
+				printf("Podaj nazwe pliku do zapisania> ");
+				char *save_file = get_line(stdin);
+
+				save_array_file(save_file, stack->students, stack->count);
+				
+				free(save_file);
+				break;
 			case READ_FROM_FILE: 
 				// Delete previously allocated stack if needed
 				// ask for filepath

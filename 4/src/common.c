@@ -2,9 +2,47 @@
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
+#include <fcntl.h>
+#include <unistd.h>
 
 #include "common.h"
 
+int save_list_file(char *filepath, STUDENT_L *head) {
+	int fd = open(filepath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd < 0) {
+		fprintf(stderr, "Cannot open file <%s>\n", filepath);
+		return -1;
+	}
+
+	STUDENT_L *current = head;
+	while (current) {
+		write(fd, current->name, strlen(current->name) + 1);
+		write(fd, current->surname, strlen(current->surname) + 1);
+		write(fd, &current->year, sizeof(int));
+
+		current = current->next;
+	}
+
+	close(fd);
+	return 0;
+}
+
+int save_array_file(char *filepath, STUDENT *students, int students_count) {
+	int fd = open(filepath, O_WRONLY | O_CREAT | O_TRUNC, 0644);
+	if (fd < 0) {
+		fprintf(stderr, "Cannot open file <%s>\n", filepath);
+		return -1;
+	}
+
+	for (int i = 0; i < students_count; i++) {
+		write(fd, students[i].name, strlen(students[i].name) + 1);
+		write(fd, students[i].surname, strlen(students[i].surname) + 1);
+		write(fd, &students[i].year, sizeof(int));
+	}
+
+	close(fd);
+	return 0;
+}
 
 void student_cpy(STUDENT *dest, STUDENT *src) {
 	dest->name = (char *)calloc(strlen(src->name) + 1, sizeof(char));

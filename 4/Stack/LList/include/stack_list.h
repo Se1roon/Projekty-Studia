@@ -9,6 +9,7 @@ typedef struct stack_list_t {
 	STUDENT_L *tail;
 } STACK_L;
 
+STUDENT_L *find_by_field_stack_l(STACK_L *stack, char *field, char *search_term);
 STUDENT_L *pop_stack_l(STACK_L *stack);
 void push_stack_l(STACK_L *stack, STUDENT_L *student);
 
