@@ -18,6 +18,6 @@ void remove_items_stack_a(STACK_A *stack);
 
 int size_stack_a(STACK_A *);
 void del_stack_a(STACK_A *);
-STACK_A *init_stack_a(FILE *);
+STACK_A *init_stack_a();
 
 #endif

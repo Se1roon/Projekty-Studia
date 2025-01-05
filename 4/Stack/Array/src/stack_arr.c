@@ -55,13 +55,13 @@ STUDENT *pop_stack_a(STACK_A *stack) {
 
 	STUDENT *student = (STUDENT *)malloc(sizeof(STUDENT));
 	memcpy(student, &stack->students[--stack->count], sizeof(STUDENT));
-	stack->students = (STUDENT *)realloc(stack->students, stack->count * sizeof(STUDENT)); // Not sure if realloc will free name and sur
+	stack->students = (STUDENT *)realloc(stack->students, stack->count * sizeof(STUDENT)); 
 
 	return student;
 }
 
 void add_item_a(STACK_A *stack, STUDENT *student) {
-	stack->students = (STUDENT *)realloc(stack->students, (++stack->count) * sizeof(STUDENT));
+	stack->students = (STUDENT *)realloc(stack->students, ++stack->count * sizeof(STUDENT));
 	memcpy(&stack->students[stack->count - 1], student, sizeof(STUDENT));
 	free(student);
 	
@@ -69,40 +69,46 @@ void add_item_a(STACK_A *stack, STUDENT *student) {
 }
 
 void print_stack_a(STACK_A *stack) {
-	printf("Liczba studentow na stosie: %d\n\n", stack->count);
-	printf("*\n");
+	printf("\nLiczba studentow na stosie: %d\n\n", stack->count);
+	if (stack->count == 0) return;
+
 	for (int i = stack->count - 1; i >= 0; i--) {
 		printf("imie: %s\n", stack->students[i].name);
 		printf("nazwisko: %s\n", stack->students[i].surname);
-		printf("rok: %d\n", stack->students[i].year);
-		printf("\n");
-	}
-}
-
-STACK_A *init_stack_a(FILE *in_file) {
-	STACK_A *stack = (STACK_A *)malloc(sizeof(STACK_A));
-	stack->count = 0;
-	stack->students = (STUDENT *)calloc(0, sizeof(STUDENT));
-
-	if (!in_file) return stack;
-
-	STUDENT *s = NULL;
-	while ((s = read_student_file(in_file))) {
-		stack->students = (STUDENT *)realloc(stack->students, (++stack->count) * sizeof(STUDENT));
-		memcpy(&stack->students[stack->count - 1], s, sizeof(STUDENT));
-		free(s);
-	}
-
-	return stack;
-}
-
-void del_stack_a(STACK_A *stack) {
-	if (stack) {
-		for (int i = 0; i < stack->count; i++)
-			del_student(&stack->students[i]);
-		free(stack->students);
-		free(stack);
+		printf("rok: %d\n\n", stack->students[i].year);
 	}
 
 	return;
+}
+
+void del_stack_a(STACK_A *stack) {
+	if (stack->count > 0) {
+		for (int i = 0; i < stack->count; i++) {
+			free(stack->students[i].name);
+			free(stack->students[i].surname);
+		}
+	}
+
+	free(stack->students);
+	free(stack);
+
+	return;
+}
+
+STACK_A *init_stack_a() {
+	STACK_A *stack = (STACK_A *)malloc(sizeof(STACK_A));
+	if (!stack) {
+		perror("malloc");
+		return NULL;
+	}
+
+	stack->count = 0;
+	stack->students = (STUDENT *)calloc(0, sizeof(STUDENT));
+	if (!stack->students) {
+		free(stack);
+		perror("malloc");
+		return NULL;
+	}
+
+	return stack;
 }

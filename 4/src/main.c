@@ -42,7 +42,7 @@ int main(void) {
 				handle_stack_list();
 				break;
 			case QUEUE_ARRAY:
-				printf("Jeszcze nie zaimplementowane!\n");
+				handle_queue_array();
 				break;
 			case QUEUE_LLIST:
 				handle_queue_list();

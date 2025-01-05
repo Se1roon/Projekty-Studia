@@ -6,6 +6,7 @@
 #include "interface.h"
 #include "stack_arr.h"
 #include "stack_list.h"
+#include "queue_arr.h"
 #include "queue_list.h"
 
 
@@ -30,11 +31,93 @@ char menu_op[7][20] = {
 	"7 - finish"
 };
 
-
 void print_menu() {
 	for (int i = 0; i < 7; i++)
 		printf("%s\n", menu_op[i]);
 	printf("> ");
+	return;
+}
+
+void handle_queue_array() {
+	QUEUE_A *queue = init_queue_a();
+
+	int inter_op = -1;
+	while (1) {
+		print_menu();
+		char *op_inp = get_line(stdin);
+		inter_op = atoi(op_inp);
+		free(op_inp);
+
+		printf("\n");
+		switch (inter_op) {
+			case PUSH:
+				STUDENT *new_student = read_student_stdin();
+				if (!new_student) {
+					fprintf(stderr, "Nie udalo sie wczytac studenta!\n");
+					break;
+				}
+				
+				enqueue_a(queue, new_student);
+				print_queue_a(queue);
+				break;
+			case POP:
+				STUDENT *student = dequeue_a(queue);
+				if (!student) {
+					fprintf(stderr, "Nie udalo sie pobrac studenta!\n");
+					break;
+				}
+
+				printf("Pobralem studenta: %s\n", student->name);
+				print_queue_a(queue);
+	
+				free(student->name);
+				free(student->surname);
+				free(student);
+				break;
+			case CLEAR:
+				delete_queue_a(queue);
+				queue = init_queue_a();
+				print_queue_a(queue);
+				break;
+			case FIND:
+				printf("Podaj pole do wyszukania> ");
+				char *field_temp = get_line(stdin);
+				char *field = to_lower_str(field_temp);
+				free(field_temp);
+
+				printf("Podaj %s> ", field);
+				char *search_term = get_line(stdin);
+			
+				printf("\n");
+				STUDENT *found_student = find_by_field_queue_a(queue, field, search_term);
+				if (found_student) {
+					printf("Znaleziono:\n");
+					printf("imie: %s\n", found_student->name);
+					printf("nazwisko: %s\n", found_student->surname);
+					printf("rok: %d\n\n", found_student->year);
+
+					free(found_student->name);
+					free(found_student->surname);
+					free(found_student);
+				} else 
+					printf("Nie znaleziono takiego studenta.\n\n");
+
+				
+				free(field);
+				free(search_term);
+				break;
+			case SAVE_TO_FILE: 
+				break;
+			case READ_FROM_FILE: 
+				break;
+			case FINISH:
+				delete_queue_a(queue);
+				return;
+			default:
+				fprintf(stderr, "Nie wiem o co ci chodzi\n");
+		}
+	}
+
 	return;
 }
 
@@ -271,13 +354,14 @@ void handle_stack_array() {
 					printf("imie: %s\n", found_student->name);
 					printf("nazwisko: %s\n", found_student->surname);
 					printf("rok: %d\n\n", found_student->year);
+
+					del_student(found_student);
+					free(found_student);
 				}
 
 				free(field);
 				free(search_term);
-
-				del_student(found_student);
-				free(found_student);
+				
 				break;
 			case SAVE_TO_FILE: 
 				printf("Podaj nazwe pliku do zapisania> ");
@@ -288,9 +372,6 @@ void handle_stack_array() {
 				free(save_file);
 				break;
 			case READ_FROM_FILE: 
-				// Delete previously allocated stack if needed
-				// ask for filepath
-				// read from it
 				break;
 			case FINISH:
 				del_stack_a(stack);
