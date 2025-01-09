@@ -23,6 +23,10 @@ char menu_ds[5][23] = {
 };
 
 int main(void) {
+	// TODO: Refine FIND methods to find ALL matching students
+	// TODO: Support saving and reading from file
+	// TODO: Refactor
+
 	int inter_ds = -1;
 	do {
 		for (int i = 0; i < 5; i++)
