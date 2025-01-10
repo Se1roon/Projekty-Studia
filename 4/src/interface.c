@@ -63,13 +63,13 @@ void handle_queue_array() {
 			case POP:
 				STUDENT *student = dequeue_a(queue);
 				if (!student) {
-					fprintf(stderr, "Nie udalo sie pobrac studenta!\n\n");
+					printf("Nie moge pobrac studenta z pustego stosu\n\n");
 					break;
 				}
 
 				printf("Pobralem studenta: %s\n", student->name);
 				print_queue_a(queue);
-	
+
 				free(student->name);
 				free(student->surname);
 				free(student);
@@ -89,26 +89,58 @@ void handle_queue_array() {
 				char *search_term = get_line(stdin);
 			
 				printf("\n");
-				STUDENT *found_student = find_by_field_queue_a(queue, field, search_term);
-				if (found_student) {
-					printf("Znaleziono:\n");
-					printf("imie: %s\n", found_student->name);
-					printf("nazwisko: %s\n", found_student->surname);
-					printf("rok: %d\n\n", found_student->year);
 
-					free(found_student->name);
-					free(found_student->surname);
-					free(found_student);
+				int found_students_count = -1;
+				// this doesn't make a copy of found students
+				STUDENT **found_students = find_by_field_queue_a(queue, field, search_term, &found_students_count); 
+				if (found_students) {
+					printf("Znaleziono:\n");
+					for (int i = 0; i < found_students_count; i++) {
+						printf("imie: %s\n", found_students[i]->name);
+						printf("nazwisko: %s\n", found_students[i]->surname);
+						printf("rok: %d\n\n", found_students[i]->year);
+					}
+					free(found_students);
 				} else 
 					printf("Nie znaleziono takiego studenta.\n\n");
 
-				
 				free(field);
 				free(search_term);
 				break;
 			case SAVE_TO_FILE: 
+				if (queue->count == 0) {
+					printf("Nie ma czego zapisywac\n\n");
+					break;
+				}
+
+				printf("Podaj nazwe pliku do zapisania> ");
+				char *save_file = get_line(stdin);
+
+				printf("\n");
+				if (save_file_queue_a(queue, save_file) < 0) {
+					fprintf(stderr, "Nie udalo sie zapisac danych do pliku\n\n");
+					free(save_file);
+					break;
+				}
+				
+				free(save_file);
 				break;
 			case READ_FROM_FILE: 
+				delete_queue_a(queue);
+				queue = init_queue_a();
+
+				printf("Podaj nazwe pliku do wczytania> ");
+				char *read_file = get_line(stdin);
+
+				if (read_file_queue_a(queue, read_file) < 0) {
+					fprintf(stderr, "\nNie udalo sie odczytac danych z pliku\n\n");
+					free(read_file);
+					break;
+				}
+
+				print_queue_a(queue);
+
+				free(read_file);
 				break;
 			case FINISH:
 				delete_queue_a(queue);
@@ -393,10 +425,67 @@ void handle_stack_array() {
 				print_stack_a(stack);
 				break;
 			case FIND:
+				printf("Podaj pole do wyszukania> ");
+				char *field_temp = get_line(stdin);
+				char *field = to_lower_str(field_temp);
+				free(field_temp);
+
+				printf("Podaj %s> ", field);
+				char *search_term = get_line(stdin);
+			
+				printf("\n");
+
+				int found_students_count = -1;
+				// this doesn't make a copy of found students
+				STUDENT **found_students = find_by_field_stack_a(stack, field, search_term, &found_students_count); 
+				if (found_students) {
+					printf("Znaleziono:\n");
+					for (int i = 0; i < found_students_count; i++) {
+						printf("imie: %s\n", found_students[i]->name);
+						printf("nazwisko: %s\n", found_students[i]->surname);
+						printf("rok: %d\n\n", found_students[i]->year);
+					}
+					free(found_students);
+				} else 
+					printf("Nie znaleziono takiego studenta.\n\n");
+
+				free(field);
+				free(search_term);
 				break;
 			case SAVE_TO_FILE: 
+				if (stack->count == 0) {
+					printf("Nie ma czego zapisywac\n\n");
+					break;
+				}
+
+				printf("Podaj nazwe pliku do zapisania> ");
+				char *save_file = get_line(stdin);
+
+				printf("\n");
+				if (save_file_stack_a(stack, save_file) < 0) {
+					fprintf(stderr, "Nie udalo sie zapisac danych do pliku\n\n");
+					free(save_file);
+					break;
+				}
+				
+				free(save_file);
 				break;
 			case READ_FROM_FILE: 
+				delete_stack_a(stack);
+				stack = init_stack_a();
+
+				printf("Podaj nazwe pliku do wczytania> ");
+				char *read_file = get_line(stdin);
+
+				if (read_file_stack_a(stack, read_file) < 0) {
+					fprintf(stderr, "\nNie udalo sie odczytac danych z pliku\n\n");
+					free(read_file);
+					break;
+				}
+
+				print_stack_a(stack);
+
+				free(read_file);
 				break;
 			case FINISH:
 				delete_stack_a(stack);
