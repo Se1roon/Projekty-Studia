@@ -57,7 +57,12 @@ STUDENT *dequeue_a(QUEUE_A *queue) {
 	for (int i = 0; i < queue->count - 1; i++)
 		queue->students[i] = queue->students[i + 1];
 
-	queue->students = (STUDENT **)realloc(queue->students, --queue->count * sizeof(STUDENT *));
+	queue->count--;
+
+	if (queue->count == 0) {
+		free(queue->students);
+		queue->students = (STUDENT **)calloc(0, sizeof(STUDENT *));
+	} else queue->students = (STUDENT **)realloc(queue->students, queue->count * sizeof(STUDENT *));
 
 	return student;
 }
@@ -165,7 +170,8 @@ int read_file_queue_a(QUEUE_A *queue, char *filepath) {
 		read(fd, &student->year, sizeof(int));
 		total_size_read += sizeof(int);
 
-		queue->students[queue->count++] = student;
+		queue->students = (STUDENT **)realloc(queue->students, ++queue->count * sizeof(STUDENT *));
+		queue->students[queue->count - 1] = student;
 	}
 
 	return 0;

@@ -5,13 +5,12 @@
 #include "interface.h"
 
 enum INTER_DS {
-	DS_PAD, // not important
+	DS_PAD,
 	STACK_ARRAY,
 	STACK_LLIST,
 	QUEUE_ARRAY,
 	QUEUE_LLIST,
 	QUIT,
-	DS_TOT
 };
 
 char menu_ds[5][23] = {
@@ -23,12 +22,9 @@ char menu_ds[5][23] = {
 };
 
 int main(void) {
-	// TODO: Refine FIND methods to find ALL matching students
-	// TODO: Support saving and reading from file
-	// TODO: Refactor
-
 	int inter_ds = -1;
-	do {
+
+	while (1) {
 		for (int i = 0; i < 5; i++)
 			printf("%s\n", menu_ds[i]);
 		printf("> ");
@@ -54,9 +50,9 @@ int main(void) {
 			case QUIT:
 				exit(0);
 			default:
-				fprintf(stderr, "Nie wiem o co ci chodzi\n");
+				fprintf(stderr, "Nie wiem o co ci chodzi\n\n");
 		}
-	} while (1);
+	}
 
 	return 0;
 }

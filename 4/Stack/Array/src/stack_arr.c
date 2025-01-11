@@ -51,9 +51,14 @@ STUDENT **find_by_field_stack_a(STACK_A *stack, char *field, char *search_term, 
 }
 
 STUDENT *pop_stack_a(STACK_A *stack) {
-	STUDENT *student = stack->students[stack->count - 1];
+	if (stack->count == 0) return NULL;
+
+	STUDENT *student = stack->students[--stack->count];
 	
-	stack->students = (STUDENT **)realloc(stack->students, --stack->count * sizeof(STUDENT));
+	if (stack->count == 0) {
+		free(stack->students);
+		stack->students = (STUDENT **)calloc(0, sizeof(STUDENT *));
+	} else stack->students = (STUDENT **)realloc(stack->students, stack->count * sizeof(STUDENT));
 
 	return student;
 }
@@ -159,7 +164,8 @@ int read_file_stack_a(STACK_A *stack, char *filepath) {
 		read(fd, &student->year, sizeof(int));
 		total_size_read += sizeof(int);
 
-		stack->students[stack->count++] = student;
+		stack->students = (STUDENT **)realloc(stack->students, ++stack->count * sizeof(STUDENT *));
+		stack->students[stack->count - 1] = student;
 	}
 
 	return 0;
