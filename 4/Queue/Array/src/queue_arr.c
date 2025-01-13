@@ -52,6 +52,8 @@ STUDENT **find_by_field_queue_a(QUEUE_A *queue, char *field, char *search_term, 
 }
 
 STUDENT *dequeue_a(QUEUE_A *queue) {
+	if (queue->count == 0) return NULL;
+
 	STUDENT *student = queue->students[0];
 
 	for (int i = 0; i < queue->count - 1; i++)

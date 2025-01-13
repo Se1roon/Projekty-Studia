@@ -53,7 +53,7 @@ void handle_queue_array() {
 			case PUSH:
 				STUDENT *new_student = read_student_stdin();
 				if (!new_student) {
-					fprintf(stderr, "Nie udalo sie wczytac studenta!\n\n");
+					fprintf(stderr, "\nNie udalo sie wczytac studenta!\n\n");
 					break;
 				}
 				
@@ -168,7 +168,7 @@ void handle_queue_list() {
 			case PUSH:
 				STUDENT_L *new_student = read_student_l_stdin();
 				if (!new_student) {
-					fprintf(stderr, "Nie udalo sie wczytac studenta!\n\n");
+					fprintf(stderr, "\nNie udalo sie wczytac studenta!\n\n");
 					break;
 				}
 				
@@ -283,7 +283,7 @@ void handle_stack_list() {
 			case PUSH:
 				STUDENT_L *new_student = read_student_l_stdin();
 				if (!new_student) {
-					fprintf(stderr, "Nie udalo sie wczytac studenta!\n\n");
+					fprintf(stderr, "\nNie udalo sie wczytac studenta!\n\n");
 					break;
 				}
 				
@@ -348,7 +348,7 @@ void handle_stack_list() {
 
 				printf("\n");
 				if (save_file_stack_l(stack, save_file) < 0) {
-					fprintf(stderr, "Nie udalo sie zapisac danych do pliku\n\n");
+					fprintf(stderr, "\nNie udalo sie zapisac danych do pliku\n\n");
 					free(save_file);
 					break;
 				}
@@ -398,7 +398,7 @@ void handle_stack_array() {
 			case PUSH:
 				STUDENT *new_student = read_student_stdin();
 				if (!new_student) {
-					fprintf(stderr, "Nie udalo sie wczytac studenta!\n\n");
+					fprintf(stderr, "\nNie udalo sie wczytac studenta!\n\n");
 					break;
 				}
 				
